@@ -46,7 +46,7 @@ module Fluent
 
         if slot.length >= @num
           $log.debug "suppressed record: #{record.to_json}"
-          break
+          next
         end
 
         slot.push(time.to_f)
