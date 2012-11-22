@@ -1,8 +1,8 @@
-= fluent-plugin-supress
+= fluent-plugin-suppress
 
 == Component
 
-=== SupressOutout
+=== SuppressOutout
 
 Fluentd plugin to suppress same messages.
 
