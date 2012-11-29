@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 module Fluent
   class SuppressOutput < Output
-    Fluent::Plugin.register_output('suppress', self)
-
     include Fluent::HandleTagNameMixin
+
+    Fluent::Plugin.register_output('suppress', self)
 
     config_param :attr_keys,     :string,  :default => nil
     config_param :num,           :integer, :default => 3
@@ -16,7 +16,7 @@ module Fluent
         raise ConfigError, "out_suppress: attr_keys is required."
       end
 
-      if ( !@remove_tag_prefix and !@remove_tag_suffix and !@add_tag_prefix and !@add_tag_suffix )
+      if ( !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix )
         raise ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
       end
 
@@ -40,7 +40,7 @@ module Fluent
 
         # expire old records time
         expired = time.to_f - @interval
-        while slot.first and slot.first <= expired
+        while slot.first && (slot.first <= expired)
           slot.shift
         end
 
