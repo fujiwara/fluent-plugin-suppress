@@ -34,8 +34,10 @@ module Fluent
 
     def emit(tag, es, chain)
       es.each do |time, record|
-        key  = @keys.map{|k| record[k]}.join("\0")
-        key  = tag + "\0" + key
+        keys = @keys.map do |key|
+          key.split(/\./).inject(record) {|r, k| r[k] }
+        end
+        key = tag + "\0" + keys.join("\0")
         slot = @slots[key] ||= []
 
         # expire old records time
