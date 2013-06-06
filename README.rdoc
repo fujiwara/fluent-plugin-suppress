@@ -42,6 +42,18 @@ Output messages:
     2012-11-22T11:22:37 sp.foo.info {"id":5,"host":"app01","message":"error!!"}
     2012-11-22T11:22:45 sp.foo.info {"id":9,"host":"web01","message":"error!!"}
 
+attr_keys allows nested key name (eg. foo.bar).
+
+    <match foo.**>
+      type           suppress
+      attr_keys      data.host, data.message
+    </match>
+
+Input messages will be suppressed by key data.host and data.message.
+
+     2012-11-22T11:22:33 foo.info {"id":1,"data":{"host":"web01","message":"error!!"}}
+     2012-11-22T11:22:34 foo.info {"id":2,"data":{"host":"web01","message":"error!!"}}
+
 == TODO
 
 - patches welcome!
