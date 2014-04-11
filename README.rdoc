@@ -54,6 +54,13 @@ Input messages will be suppressed by key data.host and data.message.
      2012-11-22T11:22:33 foo.info {"id":1,"data":{"host":"web01","message":"error!!"}}
      2012-11-22T11:22:34 foo.info {"id":2,"data":{"host":"web01","message":"error!!"}}
 
+If attr_keys is not specified, suppressed by tag only.
+
+    <match foo.**>
+      type  suppress
+    </match>
+
+
 == TODO
 
 - patches welcome!
