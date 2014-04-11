@@ -9,6 +9,10 @@ module Fluent
     config_param :num,           :integer, :default => 3
     config_param :interval,      :integer, :default => 300
 
+    unless method_defined?(:log)
+      define_method("log") { $log }
+    end
+
     def configure(conf)
       super
 
@@ -47,7 +51,7 @@ module Fluent
         end
 
         if slot.length >= @num
-          $log.debug "suppressed record: #{record.to_json}"
+          log.debug "suppressed record: #{record.to_json}"
           next
         end
 
@@ -57,7 +61,7 @@ module Fluent
         if tag != _tag
           Engine.emit(_tag, time, record)
         else
-          $log.warn "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly."
+          log.warn "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly."
         end
       end
 
