@@ -16,15 +16,11 @@ module Fluent
     def configure(conf)
       super
 
-      unless @attr_keys
-        raise ConfigError, "out_suppress: attr_keys is required."
-      end
-
       if ( !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix )
         raise ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
       end
 
-      @keys  = @attr_keys.split(/ *, */)
+      @keys  = @attr_keys ? @attr_keys.split(/ *, */) : nil
       @slots = {}
     end
 
@@ -38,10 +34,14 @@ module Fluent
 
     def emit(tag, es, chain)
       es.each do |time, record|
-        keys = @keys.map do |key|
-          key.split(/\./).inject(record) {|r, k| r[k] }
+        if @keys
+          keys = @keys.map do |key|
+            key.split(/\./).inject(record) {|r, k| r[k] }
+          end
+          key = tag + "\0" + keys.join("\0")
+        else
+          key = tag
         end
-        key = tag + "\0" + keys.join("\0")
         slot = @slots[key] ||= []
 
         # expire old records time
