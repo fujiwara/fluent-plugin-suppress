@@ -2,13 +2,11 @@
 
 == Component
 
-=== SuppressOutout
+=== SuppressOutout / SuppressFilter
 
 Fluentd plugin to suppress same messages.
 
 == Configuration
-
-=== SuppressOutput
 
 fluentd.conf
 
@@ -19,6 +17,15 @@ fluentd.conf
       attr_keys      host,message
       add_tag_prefix sp.
     </match>
+
+Fluentd >= v0.12 can use filter plugin.
+
+    <filter foo.**>
+      type           suppress
+      interval       10
+      num            2
+      attr_keys      host,message
+    </filter>
 
 In [interval] sec, [num] messages which grouped by attr_keys value, add tag prefix "sp" and pass. Other messages will be removed.
 
@@ -59,7 +66,6 @@ If attr_keys is not specified, suppressed by tag only.
     <match foo.**>
       type  suppress
     </match>
-
 
 == TODO
 
