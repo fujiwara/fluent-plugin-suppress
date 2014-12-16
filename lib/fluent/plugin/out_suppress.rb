@@ -13,10 +13,17 @@ module Fluent
       define_method("log") { $log }
     end
 
+    # Define `router` method of v0.12 to support v0.10 or earlier
+    unless method_defined?(:router)
+      define_method("router") { Fluent::Engine }
+    end
+
     def configure(conf)
       super
 
-      if ( !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix )
+      @labelled = !conf['@label'].nil?
+
+      if !@labelled && !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix
         raise ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
       end
 
@@ -58,8 +65,8 @@ module Fluent
         slot.push(time.to_f)
         _tag = tag.clone
         filter_record(_tag, time, record)
-        if tag != _tag
-          Engine.emit(_tag, time, record)
+        if @labelled || tag != _tag
+          router.emit(_tag, time, record)
         else
           log.warn "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly."
         end
