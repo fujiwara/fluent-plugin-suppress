@@ -11,20 +11,20 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   CONFIG = %[
-    interval       10
-    num            2
-    attr_keys      host, message
+    interval  10
+    num       2
+    attr_keys host, message
   ]
 
   CONFIG_WITH_NESTED_KEY = %[
-    interval       10
-    num            2
-    attr_keys      data.host, data.message
+    interval  10
+    num       2
+    attr_keys data.host, data.message
   ]
 
   CONFIG_TAG_ONLY = %[
-    interval       10
-    num            2
+    interval 10
+    num      2
   ]
 
   def create_driver(conf = CONFIG, tag='test.info')
@@ -32,6 +32,8 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   def test_emit
+    return unless defined? Fluent::Filter
+
     d = create_driver(CONFIG)
     es = Fluent::MultiEventStream.new
 
@@ -56,6 +58,8 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   def test_emit_wtih_nested_key
+    return unless defined? Fluent::Filter
+
     d = create_driver(CONFIG_WITH_NESTED_KEY)
     es = Fluent::MultiEventStream.new
 
@@ -81,6 +85,8 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   def test_emit_tagonly
+    return unless defined? Fluent::Filter
+
     d = create_driver(CONFIG_TAG_ONLY)
     es = Fluent::MultiEventStream.new
 
