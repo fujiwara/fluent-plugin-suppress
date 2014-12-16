@@ -1,5 +1,7 @@
 # fluent-plugin-suppress
 
+[![Build Status](https://travis-ci.org/fujiwara/fluent-plugin-suppress.svg?branch=master)](https://travis-ci.org/fujiwara/fluent-plugin-suppress)
+
 ## SuppressOutout / SuppressFilter
 
 Fluentd plugin to suppress same messages.
@@ -61,7 +63,7 @@ Filter plugin will not replace a tag.
 
 ### Group by nested key name
 
-attr_keys allows nested key name (eg. foo.bar).
+`attr_keys` allows nested key name (eg. `foo.bar`).
 
 ```
 <match foo.**>
@@ -79,7 +81,7 @@ Input messages will be suppressed by key data.host and data.message.
 
 ### Suppressing by tag only
 
-If attr_keys is not specified, records will be suppressed by tag only.
+If `attr_keys` is not specified, records will be suppressed by tag only.
 
 ```
 <match foo.**>
