@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "fluent-plugin-suppress"
   gem.require_paths = ["lib"]
-  gem.version       = "0.0.5"
+  gem.version       = "0.0.6"
 
   gem.add_runtime_dependency "fluentd", ">= 0.10.0"
   gem.add_development_dependency "rake", ">= 0.9.2"
