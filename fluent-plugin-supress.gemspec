@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Fluentd plugin to suppress same messages}
   gem.summary       = %q{Fluentd plugin to suppress same messages}
   gem.homepage      = "https://github.com/fujiwara/fluent-plugin-suppress"
-  gem.license       = "APLv2"
+  gem.license       = "Apache-2.0"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
