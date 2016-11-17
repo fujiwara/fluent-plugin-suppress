@@ -47,7 +47,7 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13, {"id" => 7, "host" => "web01", "message" => "error!!"})
     es.add(time + 14, {"id" => 8, "host" => "web01", "message" => "error!!"})
 
-    filtered_es = d.filter_stream('test.info', es)
+    filtered_es = d.run { d.filter_stream(es) }.filtered
     records = filtered_es.instance_variable_get(:@record_array)
     assert_equal 5, records.length
     assert_equal({"id" => 1, "host" => "web01", "message" => "error!!"}, records[0])
@@ -73,7 +73,7 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13, {"id" => 7, "data" => {"host" => "web01", "message" => "error!!"}})
     es.add(time + 14, {"id" => 8, "data" => {"host" => "web01", "message" => "error!!"}})
 
-    filtered_es = d.filter_stream('test.info', es)
+    filtered_es = d.run { d.filter_stream(es) }.filtered
     records = filtered_es.instance_variable_get(:@record_array)
 
     assert_equal 5, records.length
@@ -100,7 +100,7 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13,{"id" => 7, "host" => "web07", "message" => "7 error!!"})
     es.add(time + 14,{"id" => 8, "host" => "web08", "message" => "8 error!!"})
 
-    filtered_es = d.filter_stream('test.info', es)
+    filtered_es = d.run { d.filter_stream(es) }.filtered
     records = filtered_es.instance_variable_get(:@record_array)
 
     assert_equal 4, records.length
