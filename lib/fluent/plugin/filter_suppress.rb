@@ -1,5 +1,7 @@
-module Fluent
-  class SuppressFilter < Filter
+require 'fluent/plugin/filter'
+
+module Fluent::Plugin
+  class SuppressFilter < Fluent::Plugin::Filter
     Fluent::Plugin.register_filter('suppress', self)
 
     config_param :attr_keys,     :string,  default: nil
@@ -13,7 +15,7 @@ module Fluent
     end
 
     def filter_stream(tag, es)
-      new_es = MultiEventStream.new
+      new_es = Fluent::MultiEventStream.new
       es.each do |time, record|
         if @keys
           keys = @keys.map do |key|
