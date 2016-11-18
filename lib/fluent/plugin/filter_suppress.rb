@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Fluent
   class SuppressFilter < Filter
     Fluent::Plugin.register_filter('suppress', self)

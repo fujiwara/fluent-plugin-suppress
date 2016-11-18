@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module Fluent
   class SuppressOutput < Output
     include Fluent::HandleTagNameMixin

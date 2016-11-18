@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # -*- mode:ruby -*-
 
 Gem::Specification.new do |gem|
