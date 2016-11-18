@@ -30,14 +30,6 @@ module Fluent
       @slots = {}
     end
 
-    def start
-      super
-    end
-
-    def shutdown
-      super
-    end
-
     def emit(tag, es, chain)
       es.each do |time, record|
         if @keys
