@@ -1,8 +1,12 @@
-module Fluent
-  class SuppressOutput < Output
+require "fluent/plugin/output"
+
+module Fluent::Plugin
+  class SuppressOutput < Fluent::Plugin::Output
     include Fluent::HandleTagNameMixin
 
     Fluent::Plugin.register_output('suppress', self)
+
+    helpers :event_emitter
 
     config_param :attr_keys,     :string,  default: nil
     config_param :num,           :integer, default: 3
@@ -14,14 +18,14 @@ module Fluent
       @labelled = !conf['@label'].nil?
 
       if !@labelled && !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix
-        raise ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
+        raise Fluent::ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
       end
 
       @keys  = @attr_keys ? @attr_keys.split(/ *, */) : nil
       @slots = {}
     end
 
-    def emit(tag, es, chain)
+    def process(tag, es)
       es.each do |time, record|
         if @keys
           keys = @keys.map do |key|
@@ -53,8 +57,6 @@ module Fluent
           log.warn "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly."
         end
       end
-
-      chain.next
     end
   end
 end
