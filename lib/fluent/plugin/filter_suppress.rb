@@ -12,14 +12,6 @@ module Fluent
       @slots = {}
     end
 
-    def start
-      super
-    end
-
-    def shutdown
-      super
-    end
-
     def filter_stream(tag, es)
       new_es = MultiEventStream.new
       es.each do |time, record|
