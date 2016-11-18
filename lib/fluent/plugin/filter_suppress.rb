@@ -2,9 +2,9 @@ module Fluent
   class SuppressFilter < Filter
     Fluent::Plugin.register_filter('suppress', self)
 
-    config_param :attr_keys,     :string,  :default => nil
-    config_param :num,           :integer, :default => 3
-    config_param :interval,      :integer, :default => 300
+    config_param :attr_keys,     :string,  default: nil
+    config_param :num,           :integer, default: 3
+    config_param :interval,      :integer, default: 300
 
     def configure(conf)
       super
