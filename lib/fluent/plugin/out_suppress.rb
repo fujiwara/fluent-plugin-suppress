@@ -8,15 +8,6 @@ module Fluent
     config_param :num,           :integer, :default => 3
     config_param :interval,      :integer, :default => 300
 
-    unless method_defined?(:log)
-      define_method("log") { $log }
-    end
-
-    # Define `router` method of v0.12 to support v0.10 or earlier
-    unless method_defined?(:router)
-      define_method("router") { Fluent::Engine }
-    end
-
     def configure(conf)
       super
 
