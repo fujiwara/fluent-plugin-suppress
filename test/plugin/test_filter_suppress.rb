@@ -1,6 +1,5 @@
-require 'test/unit'
-require 'fluent/log'
-require 'fluent/test'
+require 'helper'
+require 'fluent/test/driver/filter'
 require 'fluent/plugin/filter_suppress'
 
 class SuppressFilterTest < Test::Unit::TestCase
@@ -27,17 +26,15 @@ class SuppressFilterTest < Test::Unit::TestCase
     num      2
   ]
 
-  def create_driver(conf = CONFIG, tag='test.info')
-    Fluent::Test::FilterTestDriver.new(Fluent::SuppressFilter).configure(conf, tag)
+  def create_driver(conf = CONFIG)
+    Fluent::Test::Driver::Filter.new(Fluent::Plugin::SuppressFilter).configure(conf)
   end
 
   def test_emit
-    return unless defined? Fluent::Filter
-
     d = create_driver(CONFIG)
     es = Fluent::MultiEventStream.new
 
-    time = Time.parse("2012-11-22 11:22:33 UTC").to_i
+    time = event_time("2012-11-22 11:22:33 UTC")
     es.add(time + 1, {"id" => 1, "host" => "web01", "message" => "error!!"})
     es.add(time + 2, {"id" => 2, "host" => "web01", "message" => "error!!"})
     es.add(time + 3, {"id" => 3, "host" => "web01", "message" => "error!!"})
@@ -47,8 +44,11 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13, {"id" => 7, "host" => "web01", "message" => "error!!"})
     es.add(time + 14, {"id" => 8, "host" => "web01", "message" => "error!!"})
 
-    filtered_es = d.run { d.filter_stream(es) }.filtered
-    records = filtered_es.instance_variable_get(:@record_array)
+    d.run(default_tag: "test.info") do
+      d.feed(es)
+    end
+    records = d.filtered_records
+
     assert_equal 5, records.length
     assert_equal({"id" => 1, "host" => "web01", "message" => "error!!"}, records[0])
     assert_equal({"id" => 2, "host" => "web01", "message" => "error!!"}, records[1])
@@ -58,12 +58,10 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   def test_emit_wtih_nested_key
-    return unless defined? Fluent::Filter
-
     d = create_driver(CONFIG_WITH_NESTED_KEY)
     es = Fluent::MultiEventStream.new
 
-    time = Time.parse("2012-11-22 11:22:33 UTC").to_i
+    time = event_time("2012-11-22 11:22:33 UTC")
     es.add(time + 1, {"id" => 1, "data" => {"host" => "web01", "message" => "error!!"}})
     es.add(time + 2, {"id" => 2, "data" => {"host" => "web01", "message" => "error!!"}})
     es.add(time + 3, {"id" => 3, "data" => {"host" => "web01", "message" => "error!!"}})
@@ -73,8 +71,10 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13, {"id" => 7, "data" => {"host" => "web01", "message" => "error!!"}})
     es.add(time + 14, {"id" => 8, "data" => {"host" => "web01", "message" => "error!!"}})
 
-    filtered_es = d.run { d.filter_stream(es) }.filtered
-    records = filtered_es.instance_variable_get(:@record_array)
+    d.run(default_tag: "test.info") do
+      d.feed(es)
+    end
+    records = d.filtered_records
 
     assert_equal 5, records.length
     assert_equal({"id"=>1, "data" => {"host"=>"web01", "message"=>"error!!"}}, records[0])
@@ -85,12 +85,10 @@ class SuppressFilterTest < Test::Unit::TestCase
   end
 
   def test_emit_tagonly
-    return unless defined? Fluent::Filter
-
     d = create_driver(CONFIG_TAG_ONLY)
     es = Fluent::MultiEventStream.new
 
-    time = Time.parse("2012-11-22 11:22:33 UTC").to_i
+    time = event_time("2012-11-22 11:22:33 UTC")
     es.add(time + 1, {"id" => 1, "host" => "web01", "message" => "1 error!!"})
     es.add(time + 2, {"id" => 2, "host" => "web02", "message" => "2 error!!"})
     es.add(time + 3, {"id" => 3, "host" => "web03", "message" => "3 error!!"})
@@ -100,8 +98,10 @@ class SuppressFilterTest < Test::Unit::TestCase
     es.add(time + 13,{"id" => 7, "host" => "web07", "message" => "7 error!!"})
     es.add(time + 14,{"id" => 8, "host" => "web08", "message" => "8 error!!"})
 
-    filtered_es = d.run { d.filter_stream(es) }.filtered
-    records = filtered_es.instance_variable_get(:@record_array)
+    d.run(default_tag: "test.info") do
+      d.feed(es)
+    end
+    records = d.filtered_records
 
     assert_equal 4, records.length
     assert_equal({"id"=>1, "host"=>"web01", "message"=>"1 error!!"}, records[0])
@@ -109,5 +109,4 @@ class SuppressFilterTest < Test::Unit::TestCase
     assert_equal({"id"=>6, "host"=>"web06", "message"=>"6 error!!"}, records[2])
     assert_equal({"id"=>7, "host"=>"web07", "message"=>"7 error!!"}, records[3])
   end
-
 end
