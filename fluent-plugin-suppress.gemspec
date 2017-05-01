@@ -4,8 +4,8 @@
 Gem::Specification.new do |gem|
   gem.authors       = ["FUJIWARA Shunichiro"]
   gem.email         = ["fujiwara.shunichiro@gmail.com"]
-  gem.description   = %q{Fluentd plugin to suppress same messages}
-  gem.summary       = %q{Fluentd plugin to suppress same messages}
+  gem.description   = %q{Fluentd filter plugin to suppress same messages}
+  gem.summary       = %q{Fluentd filter plugin to suppress same messages}
   gem.homepage      = "https://github.com/fujiwara/fluent-plugin-suppress"
   gem.license       = "Apache-2.0"
 
