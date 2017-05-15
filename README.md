@@ -12,7 +12,7 @@ fluentd.conf
 
 ```
 <match foo.**>
-  type           suppress
+  @type          suppress
   interval       10
   num            2
   attr_keys      host,message
@@ -52,7 +52,7 @@ Fluentd >= v0.12 can use filter plugin.
 
 ```
 <filter foo.**>
-  type      suppress
+  @type     suppress
   interval  10
   num       2
   attr_keys host,message
@@ -67,7 +67,7 @@ Filter plugin will not replace a tag.
 
 ```
 <match foo.**>
-  type           suppress
+  @type          suppress
   attr_keys      data.host, data.message
 </match>
 ```
@@ -85,7 +85,7 @@ If `attr_keys` is not specified, records will be suppressed by tag only.
 
 ```
 <match foo.**>
-  type  suppress
+  @type  suppress
   ...
 </match>
 ```
