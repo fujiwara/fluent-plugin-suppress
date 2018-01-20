@@ -35,7 +35,7 @@ module Fluent::Plugin
           slot.shift
         end
 
-        if should_suppress?(slot, @num)
+        if should_suppress?(slot: slot, number_to_keep: @num)
           log.debug "suppressed record: #{record.to_json}"
           suppressed_count += 1
           next
@@ -58,7 +58,7 @@ module Fluent::Plugin
       end
     end
 
-    def should_suppress?(slot, number_to_keep)
+    def should_suppress?(slot:, number_to_keep:)
       slot.length >= number_to_keep
     end
 
