@@ -1,4 +1,4 @@
-require "fluent/plugin/output"
+require 'fluent/plugin/output'
 
 module Fluent::Plugin
   class SuppressOutput < Fluent::Plugin::Output
@@ -18,7 +18,7 @@ module Fluent::Plugin
       @labelled = !conf['@label'].nil?
 
       if !@labelled && !@remove_tag_prefix && !@remove_tag_suffix && !@add_tag_prefix && !@add_tag_suffix
-        raise Fluent::ConfigError, "out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix."
+        raise Fluent::ConfigError, 'out_suppress: Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix.'
       end
 
       @keys  = @attr_keys ? @attr_keys.split(/ *, */) : nil
@@ -33,7 +33,7 @@ module Fluent::Plugin
       es.each do |time, record|
         if @keys
           keys = @keys.map do |key|
-            key.split(/\./).inject(record) {|r, k| r[k] }
+            key.split(/\./).inject(record) { |r, k| r[k] }
           end
           key = tag + "\0" + keys.join("\0")
         else
@@ -43,9 +43,7 @@ module Fluent::Plugin
 
         # expire old records time
         expired = time.to_f - @interval
-        while slot.first && (slot.first <= expired)
-          slot.shift
-        end
+        slot.shift while slot.first && (slot.first <= expired)
 
         if slot.length >= @num
           log.debug "suppressed record: #{record.to_json}"

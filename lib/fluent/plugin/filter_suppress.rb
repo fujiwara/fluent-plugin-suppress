@@ -7,6 +7,7 @@ module Fluent::Plugin
     config_param :attr_keys,     :string,  default: nil
     config_param :num,           :integer, default: 3
     config_param :interval,      :integer, default: 300
+    config_param :give_feedback, :string,  default: nil
 
     def configure(conf)
       super
@@ -45,13 +46,25 @@ module Fluent::Plugin
       end
 
       log.debug "Suppressed #{suppressed_count} records"
-      return new_es
+
+      # if option_give_feedback? && suppressed_count > 0
+      #   new_es.add(current_time, {message: "and #{suppressed_count} more..."})
+      # end
+      new_es
     end
 
     private
 
     def should_suppress?(slot, number_to_keep)
       slot.length >= number_to_keep
+    end
+
+    def option_give_feedback?
+      @give_feedback.downcase == 'yes'
+    end
+
+    def current_time
+      Time.now.getlocal.to_f
     end
   end
 end
