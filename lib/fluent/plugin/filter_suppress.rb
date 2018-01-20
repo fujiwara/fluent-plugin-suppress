@@ -47,9 +47,9 @@ module Fluent::Plugin
 
       log.debug "Suppressed #{suppressed_count} records"
 
-      # if option_give_feedback? && suppressed_count > 0
-      #   new_es.add(current_time, {message: "and #{suppressed_count} more..."})
-      # end
+      if option_give_feedback? && suppressed_count > 0
+        new_es.add(current_time, {'message' => "And #{suppressed_count} more..."})
+      end
       new_es
     end
 
@@ -60,7 +60,7 @@ module Fluent::Plugin
     end
 
     def option_give_feedback?
-      @give_feedback.downcase == 'yes'
+      !@give_feedback.nil? && @give_feedback.to_s.downcase == 'yes'
     end
 
     def current_time
