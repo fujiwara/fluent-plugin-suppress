@@ -45,15 +45,18 @@ module Fluent::Plugin
         new_es.add(record_time, record)
       end
 
-      log.debug "Suppressed #{suppressed_count} records"
-
-      if option_give_feedback? && suppressed_count > 0
-        new_es.add(current_time, {'message' => "And #{suppressed_count} more..."})
-      end
+      optionally_give_feedback(event_stream: new_es, count: suppressed_count)
       new_es
     end
 
     private
+
+    def optionally_give_feedback(event_stream:, count:)
+      if option_give_feedback? && count > 0
+        log.debug "Suppressed #{count} records"
+        event_stream.add(current_time, {'message' => "And #{count} more..."})
+      end
+    end
 
     def should_suppress?(slot, number_to_keep)
       slot.length >= number_to_keep
