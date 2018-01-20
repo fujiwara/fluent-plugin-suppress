@@ -17,7 +17,7 @@ module Fluent::Plugin
     def filter_stream(tag, es)
       suppressed_count = 0
       new_es = Fluent::MultiEventStream.new
-      es.each do |time, record|
+      es.each do |record_time, record|
         if @keys
           keys = @keys.map do |key|
             key.split(/\./).inject(record) {|r, k| r[k] }
@@ -28,8 +28,8 @@ module Fluent::Plugin
         end
         slot = @slots[key] ||= []
 
-        # expire old records time
-        expired = time.to_f - @interval
+        # expire old records record_time
+        expired = record_time.to_f - @interval
         while slot.first && (slot.first <= expired)
           slot.shift
         end
@@ -40,8 +40,8 @@ module Fluent::Plugin
           next
         end
 
-        slot.push(time.to_f)
-        new_es.add(time, record)
+        slot.push(record_time.to_f)
+        new_es.add(record_time, record)
       end
 
       log.debug "Suppressed #{suppressed_count} records"
