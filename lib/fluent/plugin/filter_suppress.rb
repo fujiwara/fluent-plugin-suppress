@@ -15,6 +15,7 @@ module Fluent::Plugin
     end
 
     def filter_stream(tag, es)
+      suppressed_count = 0
       new_es = Fluent::MultiEventStream.new
       es.each do |time, record|
         if @keys
@@ -33,15 +34,24 @@ module Fluent::Plugin
           slot.shift
         end
 
-        if slot.length >= @num
+        if should_suppress?(slot, @num)
           log.debug "suppressed record: #{record.to_json}"
+          suppressed_count += 1
           next
         end
 
         slot.push(time.to_f)
         new_es.add(time, record)
       end
+
+      log.debug "Suppressed #{suppressed_count} records"
       return new_es
+    end
+
+    private
+
+    def should_suppress?(slot, number_to_keep)
+      slot.length >= number_to_keep
     end
   end
 end
