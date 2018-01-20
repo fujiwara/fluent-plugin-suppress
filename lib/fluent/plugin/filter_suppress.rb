@@ -1,4 +1,5 @@
 require 'fluent/plugin/filter'
+require 'fluent/time'
 
 module Fluent::Plugin
   class SuppressFilter < Fluent::Plugin::Filter
@@ -67,7 +68,7 @@ module Fluent::Plugin
     end
 
     def current_time
-      Time.now.getlocal.to_f
+      Fluent::EventTime.now
     end
   end
 end
