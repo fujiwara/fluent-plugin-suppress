@@ -6,6 +6,7 @@ module Fluent::Plugin
 
     config_param :attr_keys,     :string,  default: nil
     config_param :num,           :integer, default: 3
+    config_param :max_slot_num,  :integer, default: 100000
     config_param :interval,      :integer, default: 300
 
     def configure(conf)
@@ -36,6 +37,13 @@ module Fluent::Plugin
         if slot.length >= @num
           log.debug "suppressed record: #{record.to_json}"
           next
+        end
+
+        if @slots.length > @max_slot_num
+          (evict_key, evict_slot) = @slots.shift
+          if evict_slot.last && (evict_slot.last > expired)
+            log.warn "@slots length exceeded @max_slot_num: #{@max_slot_num}. Evicted slot for the key: #{evict_key}"
+          end
         end
 
         slot.push(time.to_f)
