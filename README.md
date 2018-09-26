@@ -15,12 +15,14 @@ fluentd.conf
   @type          suppress
   interval       10
   num            2
+  max_slot_num   100000
   attr_keys      host,message
   add_tag_prefix sp.
 </match>
 ```
 
 In `interval` sec, `num` messages which grouped by `attr_keys` value, add tag prefix "`sp.`" and pass to follow process. Other messages will be removed.
+`max_slot_num` put an upper limit on the length of the internal variable which contains message occurences.
 
 Input messages:
 
