@@ -49,14 +49,14 @@ module Fluent::Plugin
         end
 
         if slot.length >= @num
-          log.debug "suppressed record: #{record.to_json}"
+          log.debug { "suppressed record: #{record.to_json}" }
           next
         end
 
         if @slots.length > @max_slot_num
           (evict_key, evict_slot) = @slots.shift
           if evict_slot.last && (evict_slot.last > expired)
-            log.warn "@slots length exceeded @max_slot_num: #{@max_slot_num}. Evicted slot for the key: #{evict_key}"
+            log.warn { "@slots length exceeded @max_slot_num: #{@max_slot_num}. Evicted slot for the key: #{evict_key}" }
           end
         end
 
@@ -66,7 +66,7 @@ module Fluent::Plugin
         if @labelled || tag != _tag
           router.emit(_tag, time, record)
         else
-          log.warn "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly."
+          log.warn { "Drop record #{record} tag '#{tag}' was not replaced. Can't emit record, cause infinity looping. Set remove_tag_prefix, remove_tag_suffix, add_tag_prefix or add_tag_suffix correctly." }
         end
       end
     end
